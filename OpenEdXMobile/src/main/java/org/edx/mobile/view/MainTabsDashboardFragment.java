@@ -27,7 +27,6 @@ import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.UserProfileUtils;
-import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,17 +141,10 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     }));
         }
 
-        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
-            items.add(new FragmentItemModel(
-                    environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
-                            ? WebViewDiscoverCoursesFragment.class : NativeFindCoursesFragment.class,
-                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
-                    new FragmentItemModel.FragmentStateListener() {
-                        @Override
-                        public void onFragmentSelected() {
-                            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
-                        }
-                    }));
+        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled() ||
+                environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled()) {
+            items.add(new FragmentItemModel(MainDiscoveryFragment.class,
+                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search, null));
         }
 
         return items;

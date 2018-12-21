@@ -11,9 +11,9 @@ public class DiscoveryLaunchPresenter extends ViewHoldingPresenter<DiscoveryLaun
     private final LoginPrefs loginPrefs;
 
     @NonNull
-    private final Config.EnrollmentConfig enrollmentConfig;
+    private final Config.CourseEnrollmentConfig enrollmentConfig;
 
-    public DiscoveryLaunchPresenter(@NonNull LoginPrefs loginPrefs, @NonNull Config.EnrollmentConfig enrollmentConfig) {
+    public DiscoveryLaunchPresenter(@NonNull LoginPrefs loginPrefs, @NonNull Config.CourseEnrollmentConfig enrollmentConfig) {
         this.loginPrefs = loginPrefs;
         this.enrollmentConfig = enrollmentConfig;
     }

@@ -48,6 +48,7 @@ public class Config {
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
+    private static final String PROGRAM_ENROLLMENT = "PROGRAM_ENROLLMENT";
     private static final String PROGRAM = "PROGRAM";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
@@ -101,7 +102,7 @@ public class Config {
         }
     }
 
-    public static class EnrollmentConfig {
+    public static class CourseEnrollmentConfig {
         @SerializedName("WEBVIEW")
         private WebViewConfig mWebViewConfig;
 
@@ -134,15 +135,15 @@ public class Config {
         }
 
         public String getCourseSearchUrl() {
-            return null == mWebViewConfig ? null : mWebViewConfig.getCourseSearchUrl();
+            return null == mWebViewConfig ? null : mWebViewConfig.getSearchUrl();
         }
 
         public String getCourseInfoUrlTemplate() {
-            return null == mWebViewConfig ? null : mWebViewConfig.getCourseInfoUrlTemplate();
+            return null == mWebViewConfig ? null : mWebViewConfig.getInfoUrlTemplate();
         }
 
         public boolean isWebCourseSearchEnabled() {
-            return null != mWebViewConfig && mWebViewConfig.isWebCourseSearchEnabled();
+            return null != mWebViewConfig && mWebViewConfig.isWebSearchEnabled();
         }
 
         public boolean isSubjectDiscoveryEnabled() {
@@ -150,12 +151,53 @@ public class Config {
         }
     }
 
+    public static class ProgramEnrollmentConfig {
+        @SerializedName("WEBVIEW")
+        private WebViewConfig mWebViewConfig;
+
+        @SerializedName("TYPE")
+        private String mProgramEnrollmentType;
+
+        public enum ProgramDiscoveryType {
+            WEBVIEW,
+            NATIVE
+        }
+
+        @Nullable
+        private ProgramDiscoveryType getProgramDiscoveryType() {
+            if (null == mProgramEnrollmentType) {
+                return null;
+            }
+            return ProgramDiscoveryType.valueOf(mProgramEnrollmentType.toUpperCase(Locale.US));
+        }
+
+        public boolean isProgramDiscoveryEnabled() {
+            return getProgramDiscoveryType() != null;
+        }
+
+        public WebViewConfig getWebViewConfig() {
+            return mWebViewConfig;
+        }
+
+        public String getProgramSearchUrl() {
+            return null == mWebViewConfig ? null : mWebViewConfig.getSearchUrl();
+        }
+
+        public String getProgramInfoUrlTemplate() {
+            return null == mWebViewConfig ? null : mWebViewConfig.getInfoUrlTemplate();
+        }
+
+        public boolean isWebProgramSearchEnabled() {
+            return null != mWebViewConfig && mWebViewConfig.isWebSearchEnabled();
+        }
+    }
+
     public static class WebViewConfig {
-        @SerializedName("COURSE_SEARCH_URL")
+        @SerializedName("SEARCH_URL")
         private String mSearchUrl;
 
-        @SerializedName("COURSE_INFO_URL_TEMPLATE")
-        private String mCourseInfoUrlTemplate;
+        @SerializedName("DETAIL_TEMPLATE")
+        private String mInfoUrlTemplate;
 
         @SerializedName("SEARCH_BAR_ENABLED")
         private boolean mSearchBarEnabled;
@@ -163,15 +205,15 @@ public class Config {
         @SerializedName("SUBJECT_DISCOVERY_ENABLED")
         private boolean subjectDiscovery;
 
-        public String getCourseSearchUrl() {
+        public String getSearchUrl() {
             return mSearchUrl;
         }
 
-        public String getCourseInfoUrlTemplate() {
-            return mCourseInfoUrlTemplate;
+        public String getInfoUrlTemplate() {
+            return mInfoUrlTemplate;
         }
 
-        public boolean isWebCourseSearchEnabled() {
+        public boolean isWebSearchEnabled() {
             return mSearchBarEnabled;
         }
 
@@ -643,8 +685,13 @@ public class Config {
     }
 
     @NonNull
-    public EnrollmentConfig getCourseDiscoveryConfig() {
-        return getObjectOrNewInstance(COURSE_ENROLLMENT, EnrollmentConfig.class);
+    public CourseEnrollmentConfig getCourseDiscoveryConfig() {
+        return getObjectOrNewInstance(COURSE_ENROLLMENT, CourseEnrollmentConfig.class);
+    }
+
+    @NonNull
+    public ProgramEnrollmentConfig getProgramDiscoveryConfig() {
+        return getObjectOrNewInstance(PROGRAM_ENROLLMENT, ProgramEnrollmentConfig.class);
     }
 
     @NonNull
