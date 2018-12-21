@@ -85,7 +85,7 @@ public class MainDiscoveryFragment extends BaseFragment {
 
         // TODO: Add programs discovery fragment over here
         if (environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled()) {
-            items.add(new FragmentItemModel(WebViewDiscoverCoursesFragment.class,
+            items.add(new FragmentItemModel(WebViewDiscoverProgramsFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
                     new FragmentItemModel.FragmentStateListener() {
                         @Override

@@ -156,38 +156,41 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         initSearchView();
     }
 
+    private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            initSearch(query);
+            searchView.onActionViewCollapsed();
+            final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
+            environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
+
+    private SearchView.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View view, boolean queryTextFocused) {
+            if (!queryTextFocused) {
+                updateTitleVisibility(View.VISIBLE);
+                searchView.onActionViewCollapsed();
+            } else {
+                updateTitleVisibility(View.GONE);
+            }
+        }
+    };
+
     private void initSearchView() {
         searchView = toolbarCallbacks.getSearchView();
         searchView.setQueryHint(getResources().getString(R.string.search_for_courses));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                initSearch(query);
-                searchView.onActionViewCollapsed();
-                final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
-                environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean queryTextFocused) {
-                if (!queryTextFocused) {
-                    updateTitleVisibility(View.VISIBLE);
-                    searchView.onActionViewCollapsed();
-                } else {
-                    updateTitleVisibility(View.GONE);
-                }
-            }
-        });
         if (getUserVisibleHint()) {
             searchView.setVisibility(View.VISIBLE);
+            searchView.setOnQueryTextListener(onQueryTextListener);
+            searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
         }
         if (searchView.hasFocus()) {
             updateTitleVisibility(View.GONE);
@@ -204,8 +207,11 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
     @NonNull
     protected String getInitialUrl() {
         return URLUtil.isValidUrl(binding.webview.getUrl()) ?
-                binding.webview.getUrl() :
-                environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
+                binding.webview.getUrl() : getSearchUrl();
+    }
+
+    protected String getSearchUrl() {
+        return environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
     }
 
     @Override
@@ -241,6 +247,10 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         super.setUserVisibleHint(isVisibleToUser);
         if (searchView != null) {
             searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+            if (isVisibleToUser) {
+                searchView.setOnQueryTextListener(onQueryTextListener);
+                searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
+            }
         }
     }
 
@@ -266,7 +276,7 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         }
     }
 
-    private boolean shouldShowSubjectDiscovery() {
+    protected boolean shouldShowSubjectDiscovery() {
         return getActivity() instanceof MainDashboardActivity && environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
                 getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
