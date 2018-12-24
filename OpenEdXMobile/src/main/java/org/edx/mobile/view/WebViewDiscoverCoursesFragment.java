@@ -26,9 +26,11 @@ import org.edx.mobile.event.MainDashboardRefreshEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.model.SubjectModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
+import org.edx.mobile.util.links.DefaultActionListener;
 import org.edx.mobile.view.adapters.PopularSubjectsAdapter;
 
 import java.io.IOException;
@@ -84,6 +86,25 @@ public class WebViewDiscoverCoursesFragment extends BaseWebViewDiscoverFragment 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        setWebViewActionListener();
+    }
+
+    public void setWebViewActionListener() {
+        client.setActionListener(new DefaultActionListener(getActivity(), progressWheel,
+                new DefaultActionListener.EnrollCallback() {
+                    @Override
+                    public void onResponse(@NonNull EnrolledCoursesResponse course) {
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Throwable error) {
+                    }
+
+                    @Override
+                    public void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn) {
+                    }
+                }));
     }
 
     @Override
