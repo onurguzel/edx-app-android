@@ -166,6 +166,11 @@
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
+            android:name="org.edx.mobile.view.ProgramInfoActivity"
+            android:label="@string/label_discover"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+
+        <activity
             android:name="org.edx.mobile.view.CourseDetailActivity"
             android:label="@string/label_find_courses"
             android:screenOrientation="portrait"

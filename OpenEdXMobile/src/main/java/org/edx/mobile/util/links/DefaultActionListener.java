@@ -119,7 +119,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
                 if (!TextUtils.isEmpty(pathId)) {
                     logger.debug("PathId" + pathId);
                     // Program info coming soon
-//                    environment.getRouter().showCourseInfo(activity, pathId);
+                    environment.getRouter().showProgramInfo(activity, pathId);
                 }
                 break;
             }

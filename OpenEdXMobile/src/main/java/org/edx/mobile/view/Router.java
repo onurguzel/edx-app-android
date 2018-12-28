@@ -83,6 +83,12 @@ public class Router {
         sourceActivity.startActivity(courseInfoIntent);
     }
 
+    public void showProgramInfo(Activity sourceActivity, String pathId) {
+        Intent programInfoIntent = new Intent(sourceActivity, ProgramInfoActivity.class);
+        programInfoIntent.putExtra(ProgramInfoActivity.EXTRA_PATH_ID, pathId);
+        sourceActivity.startActivity(programInfoIntent);
+    }
+
     public void showSettings(Activity sourceActivity) {
         Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
