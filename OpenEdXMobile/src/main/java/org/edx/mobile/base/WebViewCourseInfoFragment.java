@@ -17,10 +17,10 @@ import org.edx.mobile.http.notifications.FullScreenErrorNotification;
 import org.edx.mobile.interfaces.WebViewStatusListener;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.links.DefaultActionListener;
-import org.edx.mobile.view.BaseWebViewDiscoverFragment;
+import org.edx.mobile.view.BaseWebViewFragment;
 import org.edx.mobile.view.CourseInfoActivity;
 
-public class WebViewCourseInfoFragment extends BaseWebViewDiscoverFragment
+public class WebViewCourseInfoFragment extends BaseWebViewFragment
         implements WebViewStatusListener {
 
     private static final int LOG_IN_REQUEST_CODE = 42;

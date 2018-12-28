@@ -1,6 +1,8 @@
 package org.edx.mobile.view;
 
-public class WebViewDiscoverProgramsFragment extends WebViewDiscoverCoursesFragment {
+import org.edx.mobile.R;
+
+public class WebViewDiscoverProgramsFragment extends WebViewDiscoverFragment {
     @Override
     protected boolean shouldShowSubjectDiscovery() {
         return false;
@@ -9,5 +11,10 @@ public class WebViewDiscoverProgramsFragment extends WebViewDiscoverCoursesFragm
     @Override
     protected String getSearchUrl() {
         return environment.getConfig().getProgramDiscoveryConfig().getProgramSearchUrl();
+    }
+
+    @Override
+    protected int getQueryHint() {
+        return R.string.search_for_programs;
     }
 }

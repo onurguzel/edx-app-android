@@ -29,7 +29,11 @@ import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
-public abstract class BaseWebViewDiscoverFragment extends OfflineSupportBaseFragment
+/**
+ * An abstract fragment providing basic functionality for url interception, its follow up action,
+ * error handling and show page progress based on page status.
+ */
+public abstract class BaseWebViewFragment extends OfflineSupportBaseFragment
         implements WebViewStatusListener, RefreshListener {
     protected final Logger logger = new Logger(getClass().getName());
 
