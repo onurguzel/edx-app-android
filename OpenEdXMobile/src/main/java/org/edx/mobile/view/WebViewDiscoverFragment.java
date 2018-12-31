@@ -216,9 +216,9 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
 
     private void initSearchView() {
         searchView = toolbarCallbacks.getSearchView();
-        searchView.setQueryHint(getResources().getString(getQueryHint()));
         if (getUserVisibleHint()) {
             searchView.setVisibility(View.VISIBLE);
+            searchView.setQueryHint(getResources().getString(getQueryHint()));
             searchView.setOnQueryTextListener(onQueryTextListener);
             searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
         }
@@ -274,6 +274,7 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
         if (searchView != null) {
             searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
             if (isVisibleToUser) {
+                searchView.setQueryHint(getResources().getString(getQueryHint()));
                 searchView.setOnQueryTextListener(onQueryTextListener);
                 searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);
             }

@@ -331,21 +331,17 @@ public class Router {
     }
     
     public void showFindCourses(@NonNull Context context, @Nullable String searchQuery) {
-        if (!config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
-            throw new RuntimeException("Course discovery is not enabled");
+        if (!config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled() ||
+                !config.getProgramDiscoveryConfig().isProgramDiscoveryEnabled()) {
+            throw new RuntimeException("Course or Program discovery is not enabled");
         }
-        final Intent findCoursesIntent;
-        if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
-            findCoursesIntent = new Intent(context, DiscoverCoursesActivity.class);
-            if (searchQuery != null) {
-                findCoursesIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
-            }
-        } else {
-            findCoursesIntent = NativeFindCoursesActivity.newIntent(context);
+        final Intent discoveryIntent = DiscoveryActivity.newIntent(context);
+        if (searchQuery != null) {
+            discoveryIntent.putExtra(Router.EXTRA_SEARCH_QUERY, searchQuery);
         }
         //Add this flag as multiple activities need to be created
-        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(findCoursesIntent);
+        discoveryIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(discoveryIntent);
     }
 
     public void showWhatsNewActivity(@NonNull Activity activity) {

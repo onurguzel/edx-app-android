@@ -74,6 +74,8 @@ public class MainDiscoveryFragment extends BaseFragment {
                     environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
                             ? WebViewDiscoverCoursesFragment.class : NativeFindCoursesFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
+                    environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
+                            ? getArguments() : null,
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
@@ -81,24 +83,32 @@ public class MainDiscoveryFragment extends BaseFragment {
                         }
                     }));
             checkedId = R.id.option_courses;
+        } else {
+            hideTabsBar();
         }
 
-        // TODO: Add programs discovery fragment over here
         if (environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled()) {
             items.add(new FragmentItemModel(WebViewDiscoverProgramsFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
                     new FragmentItemModel.FragmentStateListener() {
                         @Override
                         public void onFragmentSelected() {
-                            //TODO: implement program discovery analytics
-//                            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+                            //TODO: Add program discovery analytics over here
                         }
                     }));
             if (checkedId == -1) {
                 checkedId = R.id.option_programs;
             }
+        } else {
+            hideTabsBar();
         }
-        binding.options.check(checkedId);
+        if (checkedId != -1) {
+            binding.options.check(checkedId);
+        }
         return items;
+    }
+
+    public void hideTabsBar() {
+        binding.options.setVisibility(View.GONE);
     }
 }
