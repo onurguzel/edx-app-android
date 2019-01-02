@@ -271,9 +271,19 @@ public abstract class WebViewDiscoverFragment extends BaseWebViewFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
+        onFragmentVisibilityChange(isVisibleToUser);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        onFragmentVisibilityChange(!hidden);
+    }
+
+    private void onFragmentVisibilityChange(boolean isVisible) {
         if (searchView != null) {
-            searchView.setVisibility(isVisibleToUser ? View.VISIBLE : View.GONE);
-            if (isVisibleToUser) {
+            if (isVisible) {
                 searchView.setQueryHint(getResources().getString(getQueryHint()));
                 searchView.setOnQueryTextListener(onQueryTextListener);
                 searchView.setOnQueryTextFocusChangeListener(onFocusChangeListener);

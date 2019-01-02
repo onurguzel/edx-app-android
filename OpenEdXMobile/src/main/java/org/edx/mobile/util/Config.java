@@ -19,6 +19,7 @@ import com.google.inject.Singleton;
 import com.squareup.phrase.Phrase;
 
 import org.edx.mobile.BuildConfig;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 
 import java.io.InputStream;
@@ -171,8 +172,11 @@ public class Config {
             return ProgramDiscoveryType.valueOf(mProgramEnrollmentType.toUpperCase(Locale.US));
         }
 
-        public boolean isProgramDiscoveryEnabled() {
-            return getProgramDiscoveryType() != null;
+        public boolean isProgramDiscoveryEnabled(@NonNull IEdxEnvironment environment) {
+            return getProgramDiscoveryType() != null &&
+                    environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled() &&
+                    environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
+            ;
         }
 
         public WebViewConfig getWebViewConfig() {

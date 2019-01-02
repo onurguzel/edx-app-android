@@ -6,25 +6,22 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMainDiscoveryBinding;
-import org.edx.mobile.model.FragmentItemModel;
 import org.edx.mobile.module.analytics.Analytics;
-import org.edx.mobile.view.adapters.FragmentItemPagerAdapter;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainDiscoveryFragment extends BaseFragment {
     @Inject
@@ -32,6 +29,9 @@ public class MainDiscoveryFragment extends BaseFragment {
 
     @Nullable
     protected FragmentMainDiscoveryBinding binding;
+
+    private Fragment courseDiscoveryFragment;
+    private Fragment programDiscoveryFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,68 +44,90 @@ public class MainDiscoveryFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // Init view pager
-        final FragmentItemPagerAdapter adapter = new FragmentItemPagerAdapter(this.getChildFragmentManager(), getFragmentItems());
-        binding.viewPager.setAdapter(adapter);
+        initFragments();
         binding.options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.option_courses:
-                        binding.viewPager.setCurrentItem(0);
-                        break;
-                    case R.id.option_programs:
-                        binding.viewPager.setCurrentItem(1);
-                        break;
-                }
+                onFragmentSelected(checkedId);
             }
         });
     }
 
-    public List<FragmentItemModel> getFragmentItems() {
-        ArrayList<FragmentItemModel> items = new ArrayList<>();
+    @Override
+    public void onResume() {
+        super.onResume();
+        onFragmentSelected(binding.options.getCheckedRadioButtonId());
+    }
 
+    public void onFragmentSelected(@IdRes int resId) {
+        switch (resId) {
+            case R.id.option_courses:
+                showFragment(courseDiscoveryFragment);
+                hideFragment(programDiscoveryFragment);
+                environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+                break;
+            case R.id.option_programs:
+                showFragment(programDiscoveryFragment);
+                hideFragment(courseDiscoveryFragment);
+                //TODO: Add program discovery analytics over here
+                break;
+        }
+    }
+
+    public void showFragment(@Nullable Fragment fragment) {
+        if (fragment == null) {
+            return;
+        }
+        getChildFragmentManager().beginTransaction()
+                .show(fragment)
+                .commit();
+    }
+
+    public void hideFragment(@Nullable Fragment fragment) {
+        if (fragment == null) {
+            return;
+        }
+        getChildFragmentManager().beginTransaction()
+                .hide(fragment)
+                .commit();
+    }
+
+    public void initFragments() {
         @IdRes
         int checkedId = -1;
+        final FragmentManager fragmentManager = getChildFragmentManager();
+
+        if (environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled(environment)) {
+            programDiscoveryFragment = new WebViewDiscoverProgramsFragment();
+            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fl_programs, programDiscoveryFragment, "fragment_programs");
+            fragmentTransaction.commit();
+
+            checkedId = R.id.option_programs;
+        } else {
+            hideTabsBar();
+        }
 
         if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
-            items.add(new FragmentItemModel(
-                    environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
-                            ? WebViewDiscoverCoursesFragment.class : NativeFindCoursesFragment.class,
-                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
-                    environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()
-                            ? getArguments() : null,
-                    new FragmentItemModel.FragmentStateListener() {
-                        @Override
-                        public void onFragmentSelected() {
-                            environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
-                        }
-                    }));
+            if (environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
+                courseDiscoveryFragment = new WebViewDiscoverCoursesFragment();
+                courseDiscoveryFragment.setArguments(getArguments());
+            } else {
+                courseDiscoveryFragment = new NativeFindCoursesFragment();
+            }
+
+            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fl_courses, courseDiscoveryFragment, "fragment_courses");
+            fragmentTransaction.commit();
             checkedId = R.id.option_courses;
         } else {
             hideTabsBar();
         }
 
-        if (environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled()) {
-            items.add(new FragmentItemModel(WebViewDiscoverProgramsFragment.class,
-                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
-                    new FragmentItemModel.FragmentStateListener() {
-                        @Override
-                        public void onFragmentSelected() {
-                            //TODO: Add program discovery analytics over here
-                        }
-                    }));
-            if (checkedId == -1) {
-                checkedId = R.id.option_programs;
-            }
-        } else {
-            hideTabsBar();
-        }
         if (checkedId != -1) {
+            onFragmentSelected(checkedId);
             binding.options.check(checkedId);
         }
-        return items;
     }
 
     public void hideTabsBar() {

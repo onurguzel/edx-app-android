@@ -33,10 +33,21 @@
                 android:text="@string/label_my_programs" />
         </RadioGroup>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
+        <FrameLayout
+            android:id="@+id/fl_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/fl_courses"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:id="@+id/fl_programs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
 
     </LinearLayout>
 </layout>

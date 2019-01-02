@@ -142,7 +142,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         }
 
         if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled() ||
-                environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled()) {
+                environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled(environment)) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search, null));
         }
