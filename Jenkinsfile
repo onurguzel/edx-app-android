@@ -8,16 +8,30 @@ pipeline {
     environment {
             PIPELINE_JOBS_NAME = 'edx-app-android-pipeline'
             ANDROID_HOME = '/opt/android-sdk-linux'
-            EDX_PROPERTIES = './OpenEdXMobile/edx.properties'
             APK_PATH = 'OpenEdXMobile/build/outputs/apk/prod/debuggable'
     }       
 
     stages {
-        
+        stage('checkingout configs') {
+            steps {
+                sh 'mkdir -p edx-mobile-config'
+                dir('edx-mobile-config'){
+                    checkout([
+                        $class: 'GitSCM', 
+                        branches: [[name: '*/master']], 
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [], 
+                        submoduleCfg: [], 
+                        userRemoteConfigs: 
+                        [[credentialsId: 'USER', url: 'https://github.com/edx/edx-mobile-config']]
+                        ])
+                }
+            }
+        }
+
         stage('create required file '){
            steps {
-               touch file: '$EDX_PROPERTIES'
-               writeFile file: '$EDX_PROPERTIES', text: 'edx.dir = \'../../edx-mobile-config/prod/\''     
+               writeFile file: './OpenEdXMobile/edx.properties', text: 'edx.dir = \'../edx-mobile-config/prod/\''  
                } 
         }
         stage('compiling edx-app-android') {
