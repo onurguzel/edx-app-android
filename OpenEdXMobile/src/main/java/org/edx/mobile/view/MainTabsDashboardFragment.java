@@ -16,6 +16,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.AccountDataLoadedEvent;
+import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.event.MoveToDiscoveryTabEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.model.FragmentItemModel;
@@ -144,7 +145,14 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
         if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled() ||
                 environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled(environment)) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
-                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search, null));
+                    getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
+                    new FragmentItemModel.FragmentStateListener() {
+                        @Override
+                        public void onFragmentSelected() {
+                            EventBus.getDefault().post(new DiscoveryTabSelectedEvent());
+                        }
+                    }
+            ));
         }
 
         return items;

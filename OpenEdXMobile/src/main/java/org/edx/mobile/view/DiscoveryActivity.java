@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.module.analytics.Analytics;
 
 public class DiscoveryActivity extends BaseSingleFragmentActivity implements ToolbarCallbacks {
     public static Intent newIntent(@NonNull Context context) {
@@ -30,6 +31,7 @@ public class DiscoveryActivity extends BaseSingleFragmentActivity implements Too
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.label_discover);
+        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
     }
 
     @Override

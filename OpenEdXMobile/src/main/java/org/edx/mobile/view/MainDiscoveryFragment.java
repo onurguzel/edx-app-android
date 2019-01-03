@@ -20,8 +20,11 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.FragmentMainDiscoveryBinding;
+import org.edx.mobile.event.DiscoveryTabSelectedEvent;
 import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.view.dialog.NativeFindCoursesFragment;
+
+import de.greenrobot.event.EventBus;
 
 public class MainDiscoveryFragment extends BaseFragment {
     @Inject
@@ -48,34 +51,33 @@ public class MainDiscoveryFragment extends BaseFragment {
         binding.options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                onFragmentSelected(checkedId);
+                onFragmentSelected(checkedId, true);
             }
         });
+        EventBus.getDefault().register(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        onFragmentSelected(binding.options.getCheckedRadioButtonId());
-    }
-
-    public void onFragmentSelected(@IdRes int resId) {
+    public void onFragmentSelected(@IdRes int resId, final boolean isUserSelected) {
         switch (resId) {
             case R.id.option_courses:
                 showFragment(courseDiscoveryFragment);
                 hideFragment(programDiscoveryFragment);
-                environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+                if (isUserSelected) {
+                    environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_COURSES);
+                }
                 break;
             case R.id.option_programs:
                 showFragment(programDiscoveryFragment);
                 hideFragment(courseDiscoveryFragment);
-                //TODO: Add program discovery analytics over here
+                if (isUserSelected) {
+                    //TODO: Add program discovery analytics over here
+                }
                 break;
         }
     }
 
     public void showFragment(@Nullable Fragment fragment) {
-        if (fragment == null) {
+        if (fragment == null || !fragment.isHidden()) {
             return;
         }
         getChildFragmentManager().beginTransaction()
@@ -84,7 +86,7 @@ public class MainDiscoveryFragment extends BaseFragment {
     }
 
     public void hideFragment(@Nullable Fragment fragment) {
-        if (fragment == null) {
+        if (fragment == null || fragment.isHidden()) {
             return;
         }
         getChildFragmentManager().beginTransaction()
@@ -125,12 +127,23 @@ public class MainDiscoveryFragment extends BaseFragment {
         }
 
         if (checkedId != -1) {
-            onFragmentSelected(checkedId);
+            onFragmentSelected(checkedId, false);
             binding.options.check(checkedId);
         }
     }
 
     public void hideTabsBar() {
         binding.options.setVisibility(View.GONE);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull DiscoveryTabSelectedEvent event) {
+        onFragmentSelected(binding.options.getCheckedRadioButtonId(), true);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

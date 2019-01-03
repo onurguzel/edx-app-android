@@ -12,15 +12,8 @@ public class ProgramInfoActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: Update this analytics
+        //TODO: Implement the analytics for program info screen
 //        environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.COURSE_INFO_SCREEN);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // TODO: Revisit this line
-//        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 
     @Override

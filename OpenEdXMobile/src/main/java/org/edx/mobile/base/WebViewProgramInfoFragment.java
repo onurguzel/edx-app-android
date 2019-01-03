@@ -21,15 +21,7 @@ import org.edx.mobile.view.ProgramInfoActivity;
 public class WebViewProgramInfoFragment extends BaseWebViewFragment
         implements WebViewStatusListener {
 
-//    private static final int LOG_IN_REQUEST_CODE = 42;
-//    private static final String INSTANCE_COURSE_ID = "enrollCourseId";
-//    private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
-//
-//    private String lastClickEnrollCourseId;
-//    private boolean lastClickEnrollEmailOptIn;
-
     private DefaultActionListener defaultActionListener;
-
     private FragmentWebviewBinding binding;
 
     @Nullable
@@ -44,25 +36,13 @@ public class WebViewProgramInfoFragment extends BaseWebViewFragment
         super.onViewCreated(view, savedInstanceState);
         loadUrl(getInitialUrl());
         setWebViewActionListener();
-//        if (null != savedInstanceState) {
-//            lastClickEnrollCourseId = savedInstanceState.getString(INSTANCE_COURSE_ID);
-//            lastClickEnrollEmailOptIn = savedInstanceState.getBoolean(INSTANCE_EMAIL_OPT_IN);
-//        }
     }
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putString(INSTANCE_COURSE_ID, lastClickEnrollCourseId);
-//        outState.putBoolean(INSTANCE_EMAIL_OPT_IN, lastClickEnrollEmailOptIn);
-//    }
 
     public void setWebViewActionListener() {
         defaultActionListener = new DefaultActionListener(getActivity(), progressWheel,
                 new DefaultActionListener.EnrollCallback() {
                     @Override
                     public void onResponse(@NonNull EnrolledCoursesResponse course) {
-
                     }
 
                     @Override
@@ -71,9 +51,6 @@ public class WebViewProgramInfoFragment extends BaseWebViewFragment
 
                     @Override
                     public void onUserNotLoggedIn(@NonNull String courseId, boolean emailOptIn) {
-//                        lastClickEnrollCourseId = courseId;
-//                        lastClickEnrollEmailOptIn = emailOptIn;
-//                        startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
                     }
                 });
         client.setActionListener(defaultActionListener);
@@ -83,14 +60,6 @@ public class WebViewProgramInfoFragment extends BaseWebViewFragment
     public FullScreenErrorNotification initFullScreenErrorNotification() {
         return new FullScreenErrorNotification(binding.webview);
     }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            defaultActionListener.onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
-//        }
-//    }
 
     /**
      * Loads the given URL into {@link #webView}.
