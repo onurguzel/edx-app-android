@@ -7,12 +7,12 @@ import org.edx.mobile.R;
 public class WebViewDiscoverCoursesFragment extends WebViewDiscoverFragment {
     protected boolean shouldShowSubjectDiscovery() {
         return getActivity() instanceof MainDashboardActivity &&
-                environment.getConfig().getCourseDiscoveryConfig().isSubjectDiscoveryEnabled() &&
+                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isSubjectFilterEnabled() &&
                 getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
 
     protected String getSearchUrl() {
-        return environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
+        return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl();
     }
 
     @Override

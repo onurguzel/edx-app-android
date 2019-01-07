@@ -27,6 +27,7 @@ import org.edx.mobile.user.Account;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.user.UserService;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.UserProfileUtils;
 
 import java.util.ArrayList;
@@ -142,8 +143,10 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
                     }));
         }
 
-        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled() ||
-                environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled(environment)) {
+        final Config.ProgramDiscoveryConfig programDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig();
+        final Config.CourseDiscoveryConfig courseDiscoveryConfig = environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig();
+        if ((courseDiscoveryConfig != null && courseDiscoveryConfig.isDiscoveryEnabled()) ||
+                (programDiscoveryConfig != null && programDiscoveryConfig.isDiscoveryEnabled(environment))) {
             items.add(new FragmentItemModel(MainDiscoveryFragment.class,
                     getResources().getString(R.string.label_discovery), FontAwesomeIcons.fa_search,
                     new FragmentItemModel.FragmentStateListener() {
@@ -160,7 +163,7 @@ public class MainTabsDashboardFragment extends TabsBaseFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull MoveToDiscoveryTabEvent event) {
-        if (!environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+        if (!environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
             return;
         }
         if (binding != null) {

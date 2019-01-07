@@ -99,7 +99,8 @@ public class MainDiscoveryFragment extends BaseFragment {
         int checkedId = -1;
         final FragmentManager fragmentManager = getChildFragmentManager();
 
-        if (environment.getConfig().getProgramDiscoveryConfig().isProgramDiscoveryEnabled(environment)) {
+        if (environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig() != null &&
+                environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().isDiscoveryEnabled(environment)) {
             programDiscoveryFragment = new WebViewDiscoverProgramsFragment();
             final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fl_programs, programDiscoveryFragment, "fragment_programs");
@@ -110,8 +111,9 @@ public class MainDiscoveryFragment extends BaseFragment {
             hideTabsBar();
         }
 
-        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
-            if (environment.getConfig().getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
+        if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig() != null &&
+                environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isDiscoveryEnabled()) {
+            if (environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().isWebviewDiscoveryEnabled()) {
                 courseDiscoveryFragment = new WebViewDiscoverCoursesFragment();
                 courseDiscoveryFragment.setArguments(getArguments());
             } else {

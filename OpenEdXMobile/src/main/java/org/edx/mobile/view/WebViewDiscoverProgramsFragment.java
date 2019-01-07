@@ -10,7 +10,7 @@ public class WebViewDiscoverProgramsFragment extends WebViewDiscoverFragment {
 
     @Override
     protected String getSearchUrl() {
-        return environment.getConfig().getProgramDiscoveryConfig().getProgramSearchUrl();
+        return environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().getBaseUrl();
     }
 
     @Override

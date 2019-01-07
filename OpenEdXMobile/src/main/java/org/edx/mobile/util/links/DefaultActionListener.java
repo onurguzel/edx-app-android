@@ -77,7 +77,7 @@ public class DefaultActionListener implements URLInterceptorWebViewClient.Action
         switch (helper.authority) {
             case ENROLLED_PROGRAM_INFO: {
                 final CharSequence url = ResourceUtil.getFormattedString(
-                        environment.getConfig().getProgramConfig().getDetailUrlTemplate(),
+                        environment.getConfig().getDiscoveryConfig().getProgramDiscoveryConfig().getInfoUrlTemplate(),
                         WebViewLink.Param.PATH_ID,
                         helper.params.get(WebViewLink.Param.PATH_ID));
                 environment.getRouter().showAuthenticatedWebviewActivity(activity, url.toString(),

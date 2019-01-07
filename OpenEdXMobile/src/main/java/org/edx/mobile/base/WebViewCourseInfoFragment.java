@@ -128,11 +128,11 @@ public class WebViewCourseInfoFragment extends BaseWebViewFragment
             return binding.webview.getUrl();
         } else if (getArguments() != null) {
             final String pathId = getArguments().getString(CourseInfoActivity.EXTRA_PATH_ID);
-            return environment.getConfig().getCourseDiscoveryConfig()
-                    .getCourseInfoUrlTemplate()
+            return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig()
+                    .getInfoUrlTemplate()
                     .replace("{" + CourseInfoActivity.EXTRA_PATH_ID + "}", pathId);
         }
-        return environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
+        return environment.getConfig().getDiscoveryConfig().getCourseDiscoveryConfig().getBaseUrl();
     }
 
     @Override
