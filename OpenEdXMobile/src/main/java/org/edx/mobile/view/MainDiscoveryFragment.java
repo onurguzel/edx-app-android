@@ -70,7 +70,7 @@ public class MainDiscoveryFragment extends BaseFragment {
                 showFragment(programDiscoveryFragment);
                 hideFragment(courseDiscoveryFragment);
                 if (isUserSelected) {
-                    //TODO: Add program discovery analytics over here
+                    environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.FIND_PROGRAMS);
                 }
                 break;
         }

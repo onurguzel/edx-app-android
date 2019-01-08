@@ -179,7 +179,6 @@
         <activity
             android:name=".view.DiscoveryActivity"
             android:label="@string/label_discover"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
 
         <activity
